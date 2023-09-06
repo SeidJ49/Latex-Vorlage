@@ -1,0 +1,66 @@
+\chapter{Grundlagen}
+Die grundlegenden Konzepte und Techniken des A*-Algorithmus bilden das Fundament für das Verständnis und die Implementierung eines effizienten Routenplanungsalgorithmus. In diesem Kapitel werden die wichtigsten Aspekte des A*-Algorithmus behandelt, darunter die Verwendung von Heuristiken und die Funktionsweise des \\
+Algorithmus. 
+
+\section{A*-Algorithmus}
+Der A*-Algorithmus ist ein leistungsfähiger und weit verbreiteter Algorithmus für die Routenplanung in Graphen. Er kombiniert geschickt die Verwendung von Heuristiken mit einer Suche in der Breite oder in der Tiefe, um den besten Weg zwischen einem Startknoten und einem Zielpunkt zu finden. 
+
+Entwickelt wurde der Algorithmus 1968 von Peter Hart, Nils Nilsson und Bertram Raphael. Der Name A* ist eine Anspielung auf die verwendete Bewertungsfunktion, die die Schätzung des kürzesten Weges von einem gegebenen Knoten zu einem Zielknoten unter Berücksichtigung des bereits zurückgelegten Weges berücksichtigt. \cite{noauthor_-algorithmus_2022-1}
+
+Der A*-Algorithmus kombiniert die Vorteile des Dijkstra-Algorithmus und des Best-First-Search-Algorithmus. Er arbeitet, indem er die Knoten des Graphen systematisch durchsucht und dabei den bisher geringsten Kosten von einem Startknoten zu jedem besuchten Knoten folgt. Dazu verwendet er eine Heuristik, die die verbleibenden Kosten vom aktuellen Knoten bis zum Zielknoten abschätzt. Diese Heuristik ist die entscheidende Komponente, die es dem A*-Algorithmus ermöglicht, effizientere Such\-pfade zu finden, indem vielversprechende Pfade bevorzugt und weniger vielversprechende Pfade ignoriert werden.
+
+Während des Suchvorgangs berechnet der A*-Algorithmus für jeden Knoten $x$ 
+\begin{equation}
+	f(x) = g(x) + h(x)
+\end{equation}
+wobei $g(x)$ die bisherige Kostenfunktion vom Startknoten zum Knoten $x$ und $h(x)$ die Heuristik zur Schätzung der Kosten vom Knoten $x$ zum Zielknoten ist. Durch die Wahl des Knotens mit dem kleinsten $f(x)$ wird sichergestellt, dass der Algorithmus den kürzesten Weg findet. \cite{russell_artificial_2010}
+% Quelle vom Buch verwenden
+
+
+Es ist jedoch zu beachten, dass die Effizienz und Genauigkeit des A*-Algorithmus stark von der verwendeten Heuristik abhängt. Eine gut gewählte Heuristik kann die Suche beschleunigen, während eine schlechte Heuristik möglicherweise nicht die optimale Lösung liefert oder die Laufzeit des Algorithmus erhöht.
+
+
+\section{Heuristiken im A*-Algorithmus}
+Ein zentraler Aspekt des A*-Algorithmus ist die Verwendung von Heuristiken, um den Suchraum effizienter zu durchsuchen. Eine Heuristik ist eine Funktion, die eine Schätzung des verbleibenden Aufwands für die Erreichung des Zielpunkts liefert. \\
+Sie wird verwendet, um die Auswahl der nächsten Knoten zu beeinflussen und somit den Algorithmus auf den vielversprechendsten Pfad zu bringen. \cite{russell_artificial_2010}
+%Quelle vom Buch  
+
+\subsection{Manhattan-Heuristik}
+Die Manhattan-Heuristik verwendet die Summe der absoluten Differenzen der Koordinaten zweier Punkte. Sie misst die horizontale und vertikale Entfernung zwischen den Punkten und vernachlässigt dabei diagonale Bewegungen. Die Manhattan-Heuristik ist in Situationen nützlich, in denen nur horizontale und vertikale Bewegungen erlaubt sind, wie zum Beispiel in Schachbrettmustern.
+
+\subsection{Euklidische-Heuristik}
+Die Euklidische-Heuristik verwendet den euklidischen Abstand zwischen zwei Punkten in einem Kartesischen Koordinatensystem. Sie ist in Situationen nützlich, in denen es eine klare räumliche Struktur gibt und Bewegungen in beliebigen Richtungen möglich sind.
+
+\subsection{Wahl einer Heuristik}
+Die Wahl der Heuristik hängt von der spezifischen Anwendung ab und kann einen erheblichen Einfluss auf die Effizienz und Genauigkeit des A*-Algorithmus haben.
+Um zu entscheiden, welche Heuristik besser geeignet ist, sollte man die spezifischen Anforderungen und Eigenschaften des Problems berücksichtigen.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{bilder/Vergleich_Manhattan-Euklidisch.jpg}
+	\caption{Vergleich der Heuristiken}
+	\label{fig:vglManEuk}
+\end{figure}
+
+\newpage
+In Abbildung \ref{fig:vglManEuk} kann man sehr gut den Unterschied der beiden Heuristiken erkennen. Wenn die Bewegung in beliebigen Richtungen stattfinden können und die räumliche Struktur wichtig ist, liefert die euklidische-Heuristik eine bessere Schätzung. Wenn jedoch nur horizontale und vertikale Bewegungen möglich sind oder die räumliche Struktur diskret ist, ist die Manhattan-Heuristik angemessener. \\
+Da ein Routenplanungsalgorithmus nicht auf horizontale und vertikale Bewegungen beschränkt sein sollte, ist die euklidische Heuristik für diesen Anwendungsfall die bessere Wahl.
+
+\section{Vergleich mit anderen Routenplanalgorithmen}
+Die Routenplanung ist ein grundlegendes Problem in vielen Anwendungsbereichen, und es gibt verschiedene Algorithen, die entwickelt wurden, um dieses Problem zu lösen. In diesem Abschnitt wird der A*-Algorithmus mit anderen bekannten Routenplanungsalgorithmen verglichen und seine Stärken und Schwächen aufgezeigt.
+
+\subsection{Dijkstra-Algorithmus}
+Der Dijkstra-Algorithmus ist einer der ältesten und am häufigsten verwendeten Algorithmen für die Routenplanung in gewichteten Graphen. Er findet den kürzesten Weg von einem Startknoten zu allen anderen Knoten im Graphen. Im Gegensatz zum A*-Algorithmus verwendet der Dijkstra-Algorithmus keine Heuristiken, sondern durchläuft alle Knoten, um den kürzesten Pfad zu finden \cite{sedgewick_algorithms_2011}. Dies führt dazu, dass der Dijkstra-Algorithmus bei großen Graphen, insbesondere bei Graphen mit vielen Knoten, langsamer sein kann als der A*-Algorithmus.
+%quelle von Buch Algorithms
+
+\newpage
+\subsection{Bellman-Ford-Algorithmus}
+Der Bellman-Ford-Algorithmus ist ein weiterer bekannter Algorithmus, der ebenfalls mit gewichteten Graphen arbeitet. Im Gegensatz zum Dijkstra-Algorithmus kann der Bellman-Ford-Algorithmus jedoch auch mit Graphen umgehen, die negative Kantenlängen enthalten. Dies macht ihn zu einer geeigneten Wahl in bestimmten Situat\-ionen, in denen der A*-Algorithmus möglicherweise nicht angewendet werden kann. \\
+Allerdings ist der Bellman-Ford-Algorithmus in der Regel langsamer als der A*-Algori\-thmus, insbesondere bei großen Graphen.
+
+\subsection{Greedy Best-First-Search}
+Greedy Best-First-Search ist ein weiterer heuristischer Algorithmus, der für die Routenplanung verwendet werden kann. Ähnlich wie der A*-Algorithmus verwendet er eine Heuristik, um die Auswahl der nächsten Knoten zu beeinflussen. Allerdings verwendet Greedy Best-First-Search ausschließlich die Heuristik, ohne die bisherigen Kosten zu berücksichtigen. Dies führt dazu, dass Greedy Best-First-Search möglicherweise nicht den optimalen Pfad findet und zu suboptimalen Ergebnissen führen kann. \cite{noauthor_greedy_2022}
+%quelle GeeksforGeeks
+
+\subsection{Breitensuche (BFS) und Tiefensuche (DFS)}
+Breitensuche und Tiefensuche sind einfache Suchalgorithmen, die auch für die Routenplanung verwendet werden können. Sie durchsuchen den Graphen schrittweise, ohne Heuristiken oder Kosten zu berücksichtigen. Obwohl diese Algorithmen einfach zu implementieren sind, sind sie möglicherweise nicht die effizienteste Wahl für die Routenplanung in großen Graphen, da sie den Suchraum nicht effizient durchsuchen.

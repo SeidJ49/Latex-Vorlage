@@ -1,0 +1,538 @@
+\chapter{Anhang}
+Im Anhang dieser Studienarbeit finden Sie weitere Informationen und Materialien, die zur Vertiefung des Themas dienen.
+
+\section{Code zum lesen der GraphML-Datei}
+Hier finden Sie den vollständigen Quellcode für das Einlesen der GraphML-Datei in der Programmiersprache C++. Der Quellcode enthält Kommentare und Erklärungen, die den Algorithmus und seine Funktionsweise veranschaulichen.
+
+\subsection{car\_readFile.hpp}
+\begin{lstlisting}
+#ifndef PJ_RA_CAR_READFILE_HPP
+#define PJ_RA_CAR_READFILE_HPP
+
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+// Default filename for reading graph data (test.graphml).
+constexpr char c_filename[] = "test.graphml";
+
+// Data structure representing a node in the graph.
+struct NodeData
+{
+	NodeData() : m_id{0U}, m_x{0.0}, m_y{0.0}
+	{
+	}
+	
+	NodeData(uint16_t id, float x, float y, vector<int> connectedNodes)
+	{
+		this->m_id = id;
+		this->m_x = x;
+		this->m_y = y;
+		this->connectedNodes = connectedNodes;
+	}
+	
+	uint16_t m_id;              // The ID of the node in the graph.
+	float m_x;                  // The x-coordinate of the node.
+	float m_y;                  // The y-coordinate of the node.
+	vector<int> connectedNodes; // A list of IDs of nodes connected to this node.
+	
+	// Custom comparison operator used for sorting nodes by their ID.
+	bool operator <(const NodeData &other) const
+	{
+		return (this->m_id < other.m_id);
+	}
+};
+
+// Class for reading data from a graph file.
+class ReadFile
+{
+	public:
+	ReadFile();                     // Default constructor with default filename.
+	ReadFile(string filename);      // Constructor with a custom filename.
+	
+	void readFile();                // Read the graph data from the file.
+	
+	void setFilename(string filename);               // Set a new filename for reading graph data.
+	unordered_map<uint16_t, NodeData> getNodes();    // Get the map of nodes read from the file.
+	void exportMapToInl();                          // Export the node data to an inline file (not implemented).
+	
+	protected:
+	NodeData m_currentNode;             // Current node being read from the file.
+	unordered_map<uint16_t, NodeData> m_nodes;    // Map to store all the nodes read from the file.
+	
+	fstream graphMlFile;            // Filestream for reading the graph data.
+	string m_filename;              // Filename of the graph file being read.
+	string m_currentLine;           // Current line being processed while reading the file.
+	
+	// Read node data from the file and store it in the current node.
+	void readNodeDataFromFile();
+	
+	// Read edge data from the file and update connectedNodes of nodes accordingly.
+	void readEdgeDataFromFile();
+};
+
+#endif
+
+\end{lstlisting}
+
+\subsection{car\_readFile.cpp}
+\begin{lstlisting}
+#include "car_readFile.hpp"
+
+// Default constructor sets the filename to the default value (test.graphml).
+ReadFile::ReadFile()
+{
+	this->m_filename = c_filename;
+}
+
+// Constructor with a custom filename provided by the user.
+ReadFile::ReadFile(string filename)
+{
+	this->m_filename = filename;
+}
+
+// Read the graph data from the file using the specified filename.
+void ReadFile::readFile()
+{
+	// Open the graphML file for reading.
+	graphMlFile.open(m_filename);
+	
+	// Check if the file was successfully opened.
+	if (!graphMlFile)
+	{
+		cerr << "Fehler beim Öffnen von " << m_filename << "!" << endl;
+		throw;
+	}
+	
+	// Read the file line by line and process the data.
+	while (getline(graphMlFile, m_currentLine))
+	{
+		// If the line contains "<node", read node data from the file.
+		if (m_currentLine.find("<node") != string::npos)
+		{
+			readNodeDataFromFile();
+			m_nodes[m_currentNode.m_id] = m_currentNode;
+		}
+		// If the line contains "<edge", read edge data from the file.
+		else if (m_currentLine.find("<edge", 0) != string::npos)
+		{
+			readEdgeDataFromFile();
+		}
+		// Otherwise, continue to the next line.
+		else
+		{
+			continue;
+		}
+	}
+}
+
+// Read node data from the file and store it in the current node.
+void ReadFile::readNodeDataFromFile()
+{
+	// Continue reading until reaching the end of the current node data.
+	do
+	{
+		// If the line contains "<node", extract the node ID.
+		if (m_currentLine.find("<node", 0) != string::npos)
+		{
+			string searchString = "id=\"";
+			string endString = "\">";
+			
+			size_t startPos = m_currentLine.find(searchString) + searchString.length();
+			size_t endPos = m_currentLine.find(endString);
+			string value = m_currentLine.substr(startPos, endPos - startPos);
+			
+			m_currentNode.m_id = stoi(value);
+		}
+		// If the line contains "<data key", extract the x and y values.
+		else if (m_currentLine.find("<data key", 0) != string::npos)
+		{
+			// Get the x value.
+			string searchString = "key=\"d0\">";
+			string endString = "</data>";
+			
+			size_t startPos = m_currentLine.find(searchString) + searchString.length();
+			size_t endPos = m_currentLine.find(endString);
+			
+			string value = m_currentLine.substr(startPos, endPos - startPos);
+			m_currentNode.m_x = stof(value);
+			
+			// Get the y value from the next line.
+			getline(graphMlFile, m_currentLine);
+			
+			searchString = "key=\"d1\">";
+			
+			startPos = m_currentLine.find(searchString) + searchString.length();
+			endPos = m_currentLine.find(endString);
+			
+			value = m_currentLine.substr(startPos, endPos - startPos);
+			m_currentNode.m_y = stof(value);
+		}
+		// If the line contains "</node>", the node data reading is complete.
+		else if (m_currentLine.find("</node>", 0) != string::npos)
+		{
+			break;
+		}
+	} while (getline(graphMlFile, m_currentLine));
+}
+
+// Read edge data from the file and update connectedNodes of nodes accordingly.
+void ReadFile::readEdgeDataFromFile()
+{
+	// Continue reading until reaching the end of the current edge data.
+	do
+	{
+		// If the line contains "<edge", extract the source and target node IDs.
+		if (m_currentLine.find("<edge", 0) != string::npos)
+		{
+			string searchString = "source=\"";
+			string endString = "\" target=\"";
+			
+			size_t startPos = m_currentLine.find(searchString) + searchString.length();
+			size_t endPos = m_currentLine.find(endString);
+			string value = m_currentLine.substr(startPos, endPos - startPos);
+			
+			int src = stoi(value);
+			
+			searchString = "target=\"";
+			endString = "\">";
+			
+			startPos = m_currentLine.find(searchString) + searchString.length();
+			endPos = m_currentLine.find(endString);
+			value = m_currentLine.substr(startPos, endPos - startPos);
+			
+			// Update the connectedNodes list for the source node.
+			m_nodes[src].connectedNodes.push_back(stoi(value));
+		}
+		// If the line contains "</edge>", the edge data reading is complete.
+		else if (m_currentLine.find("</edge>", 0) != string::npos)
+		{
+			break;
+		}
+	} while (getline(graphMlFile, m_currentLine));
+}
+
+// Set a new filename for reading graph data.
+void ReadFile::setFilename(string filename)
+{
+	this->m_filename = filename;
+}
+
+// Get the map of nodes read from the file.
+unordered_map<uint16_t, NodeData> ReadFile::getNodes()
+{
+	return this->m_nodes;
+}
+
+// Export the node data to an inline file (not implemented).
+void ReadFile::exportMapToInl()
+{
+	// Not implemented yet.
+}
+
+\end{lstlisting}
+
+
+\subsection{unittest\_readFile.cpp}
+\begin{lstlisting}
+#include <gtest/gtest.h>
+#include "../car_readFile/car_readFile.hpp"
+
+class carReadFile_Fixture : public ::testing::Test, ReadFile
+{
+	protected:
+	ReadFile m_ReadFile;
+	
+	vector<NodeData> m_testNodes;
+};
+
+TEST_F(carReadFile_Fixture, readTest1)
+{
+	// set test Variables
+	NodeData testData;
+	testData.m_id = 1;
+	testData.m_x = stof("2.22");
+	testData.m_y = stof("2.8");
+	testData.connectedNodes.push_back(3);
+	m_testNodes.push_back(testData);
+	
+	m_ReadFile.setFilename("unittest_UselessTest-Graph.graphml");
+	EXPECT_NO_THROW(m_ReadFile.readFile());
+	
+	unordered_map<uint16_t, NodeData> actualNodes = m_ReadFile.getNodes();
+	
+	EXPECT_EQ(actualNodes[1U].m_id, testData.m_id);
+	EXPECT_EQ(actualNodes[1U].m_x, testData.m_x);
+	EXPECT_EQ(actualNodes[1U].m_y, testData.m_y);
+	EXPECT_EQ(actualNodes[1U].connectedNodes[0], testData.connectedNodes[0]);
+}
+
+TEST_F(carReadFile_Fixture, readTest2)
+{
+	
+	// set test Variables
+	unordered_map<uint16_t, NodeData> testNodes;
+	
+	testNodes[1U] = NodeData(1, stof("2.22"), stof("2.8"), {3, 4});
+	testNodes[2U] = NodeData(2, stof("2.22"), stof("3.17"), {3});
+	testNodes[3U] = NodeData(3, stof("2.79"), stof("3.74"), {});
+	testNodes[4U] = NodeData(4, stof("3.16"), stof("3.74"), {1});
+	
+	m_ReadFile.setFilename("unittest_Test-Graph.graphml");
+	EXPECT_NO_THROW(m_ReadFile.readFile());
+	
+	unordered_map<uint16_t, NodeData> actualNodes = m_ReadFile.getNodes();
+	
+	for (uint16_t cnt{1U}; cnt < 4U; ++cnt)
+	{
+		EXPECT_EQ(actualNodes[cnt].m_id, testNodes[cnt].m_id);
+		EXPECT_EQ(actualNodes[cnt].m_x, testNodes[cnt].m_x);
+		EXPECT_EQ(actualNodes[cnt].m_y, testNodes[cnt].m_y);
+		
+		for (uint16_t i{0}; i < actualNodes[cnt].connectedNodes.size(); ++i)
+		{
+			EXPECT_EQ(actualNodes[cnt].connectedNodes[i], testNodes[cnt].connectedNodes[i]);
+		}
+	}
+}
+\end{lstlisting}
+
+\section{Code des implementierten Algorithmus}
+Hier finden Sie den vollständigen Quellcode der Implementierung des A*-Algorithmus in der Programmiersprache C++. Der Quellcode enthält Kommentare und Erklärungen, die den Algorithmus und seine Funktionsweise veranschaulichen. Dies ermöglicht es Ihnen, den Algorithmus zu studieren, zu analysieren und bei Bedarf anzupassen oder zu erweitern.
+\subsection{car\_Algorithm.hpp}
+\begin{lstlisting}
+#ifndef CARALGORITHM_HPP
+#define CARALGORITHM_HPP
+
+#include <vector>
+#include <queue>
+#include <unordered_map>
+#include <cmath>
+
+#include "../car_readFile/car_readFile.hpp"
+
+using namespace std;
+
+// Tolerance value for comparing floating-point numbers.
+const float toleranz = 0.03f;
+
+// Represents a node used in the A* algorithm.
+struct Node
+{
+	int id;         // The ID of the node in the graph.
+	float fScore;   // The f-score value used in the A* algorithm for node comparison.
+	float gScore;   // The g-score value used in the A* algorithm for tracking the path cost.
+	
+	// Custom comparison operator used for priority queue ordering.
+	bool operator<(const Node& other) const { return fScore > other.fScore; }
+};
+
+// The A* algorithm class that inherits from the ReadFile class.
+class AStarAlgorithm : ReadFile
+{
+	public:
+	// Executes the A* algorithm to find the shortest path between two nodes.
+	void aStarAlgorithm(int startId, int goalId);
+	
+	// Shortens straight road segments by removing intermediate nodes with similar positions.
+	void shortenStraightRoad();
+	
+	// Returns the path found by the A* algorithm.
+	vector<uint16_t> getPath();
+	
+	// Returns a reference to the ReadFile object used for reading input data.
+	ReadFile& getReadFile();
+	
+	private:
+	ReadFile m_readFile;             // Object to read input data from a file.
+	vector<uint16_t> m_path;         // The final path found by the A* algorithm.
+	
+	// Calculates the heuristic value (estimated cost) between two nodes A and B.
+	// This heuristic is used to guide the A* algorithm towards the goal efficiently.
+	float heuristic(NodeData& nodeA, NodeData& nodeB);
+	
+	// Checks if the x-coordinate of two points is within the tolerance range.
+	bool tolerancX(float currX, float prevX);
+	
+	// Checks if the y-coordinate of two points is within the tolerance range.
+	bool tolerancY(float currY, float prevY);
+};
+
+#endif
+\end{lstlisting}
+
+\subsection{car\_Algorithm.cpp}
+\begin{lstlisting}
+#include "car_Algorithm.hpp"
+
+vector<uint16_t> AStarAlgorithm::getPath()
+{
+	// Return the final path found by the A* algorithm.
+	return this->m_path;
+}
+
+ReadFile& AStarAlgorithm::getReadFile()
+{
+	// Return a reference to the ReadFile object used for reading input data.
+	return this->m_readFile;
+}
+
+// Calculate the heuristic value (estimated cost) between two nodes A and B.
+// This heuristic is used to guide the A* algorithm towards the goal efficiently.
+float AStarAlgorithm::heuristic(NodeData& nodeA, NodeData& nodeB)
+{
+	return sqrt(pow(nodeA.m_x - nodeB.m_x, 2) + pow(nodeA.m_y - nodeB.m_y, 2));
+}
+
+// Check if the x-coordinate of two points is within the tolerance range.
+bool AStarAlgorithm::tolerancX(float currX, float prevX)
+{
+	return (((currX - toleranz) <= prevX) && (prevX <= (currX + toleranz)));
+}
+
+// Check if the y-coordinate of two points is within the tolerance range.
+bool AStarAlgorithm::tolerancY(float currY, float prevY)
+{
+	return (((currY - toleranz) <= prevY) && (prevY <= (currY + toleranz)));
+}
+
+void AStarAlgorithm::aStarAlgorithm(int startId, int goalId)
+{
+	// Create two hash maps to store the gScore and fScore for each node.
+	unordered_map<uint16_t, float> gScores;
+	unordered_map<uint16_t, uint16_t> cameFrom;
+	priority_queue<Node> openSet;
+	
+	gScores[startId] = 0.0f;
+	openSet.push({ startId, heuristic(m_readFile.getNodes()[startId], m_readFile.getNodes()[goalId]), 0.0f });
+	
+	while (!openSet.empty())
+	{
+		Node current = openSet.top();
+		if (current.id == goalId)
+		{
+			// Reconstruct the path by backtracking from the goal node to the start node.
+			int node = current.id;
+			m_path.push_back(node);
+			while (cameFrom.find(node) != cameFrom.end())
+			{
+				node = cameFrom[node];
+				m_path.push_back(node);
+			}
+			// Reverse the path to get the correct order.
+			reverse(m_path.begin(), m_path.end());
+			// Path found, exit the loop.
+			break;
+		}
+		
+		openSet.pop();
+		vector<int> currentIdConnectedNodes = m_readFile.getNodes()[current.id].connectedNodes;
+		for (const auto& neighborId : currentIdConnectedNodes)
+		{
+			float tentativeGScore = gScores[current.id] + heuristic(m_readFile.getNodes()[current.id], m_readFile.getNodes()[neighborId]);
+			if (gScores.find(neighborId) == gScores.end() || tentativeGScore < gScores[neighborId])
+			{
+				gScores[neighborId] = tentativeGScore;
+				float fScore = tentativeGScore + heuristic(m_readFile.getNodes()[neighborId], m_readFile.getNodes()[goalId]);
+				openSet.push({ neighborId, fScore, tentativeGScore });
+				cameFrom[neighborId] = current.id;
+			}
+		}
+	}
+}
+
+void AStarAlgorithm::shortenStraightRoad()
+{
+	// Remove intermediate nodes in the path that are within the tolerance of straight road segments.
+	for(uint16_t i{1U}; i < (m_path.size() - 1); ++i)
+	{
+		if(tolerancX(m_readFile.getNodes()[m_path.at(i)].m_x, m_readFile.getNodes()[m_path.at(i + 1)].m_x)
+		|| tolerancY(m_readFile.getNodes()[m_path.at(i)].m_y, m_readFile.getNodes()[m_path.at(i + 1)].m_y))
+		{
+			m_path.erase(m_path.begin() + i);
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{unittest\_Algorithm.cpp}
+\begin{lstlisting}
+#include <gtest/gtest.h>
+#include "../car_algorithm/car_Algorithm.hpp"
+	
+class carAlgorithm_Fixture : public ::testing::Test
+{
+	protected:
+	AStarAlgorithm m_AStarAlgorithm;
+};
+	
+TEST_F(carAlgorithm_Fixture, simpleAStarTest)
+{
+	vector<uint16_t> expectedPath = {115, 116, 117, 118};
+	
+	m_AStarAlgorithm.getReadFile().setFilename("Test_track.graphml");
+	m_AStarAlgorithm.getReadFile().readFile();
+		
+	m_AStarAlgorithm.aStarAlgorithm(115, 118);
+		
+	vector<uint16_t> actualPath = m_AStarAlgorithm.getPath();
+		
+	if (actualPath.empty())
+	{
+		ASSERT_FALSE(true) << "No Path was found";
+	}
+	for (uint16_t i{0}; i < actualPath.size(); ++i)
+	{
+		EXPECT_EQ(expectedPath.at(i), actualPath.at(i));
+	}
+}
+	
+TEST_F(carAlgorithm_Fixture, simpleAStarTest2)
+{
+	vector<uint16_t> expectedPath = {57, 58, 59, 2, 9, 7, 74, 75, 16, 20, 17};
+	
+	m_AStarAlgorithm.getReadFile().setFilename("Test_track.graphml");
+	m_AStarAlgorithm.getReadFile().readFile();
+	
+	m_AStarAlgorithm.aStarAlgorithm(57, 17);
+	
+	vector<uint16_t> actualPath = m_AStarAlgorithm.getPath();
+		
+	if (actualPath.empty())
+	{
+		ASSERT_FALSE(true) << "No Path was found";
+	}
+	for (uint16_t i{0}; i < actualPath.size(); ++i)
+	{
+		EXPECT_EQ(expectedPath.at(i), actualPath.at(i));
+	}
+}
+	
+TEST_F(carAlgorithm_Fixture, crossParking)
+{
+	vector<uint16_t> expectedPath = {86, 77, 82, 80, 92, 93, 94, 68, 73, 71, 124, 125, 126, 127, 128, 59, 64, 62, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163};
+		
+	m_AStarAlgorithm.getReadFile().setFilename("Competition_track.graphml");
+	m_AStarAlgorithm.getReadFile().readFile();
+		
+	m_AStarAlgorithm.aStarAlgorithm(86, 163);
+		
+	vector<uint16_t> actualPath = m_AStarAlgorithm.getPath();
+		
+	if (actualPath.empty())
+	{
+		ASSERT_FALSE(true) << "No Path was found";
+	}
+	for (uint16_t i{0}; i < actualPath.size(); ++i)
+	{
+		EXPECT_EQ(expectedPath.at(i), actualPath.at(i));
+	}
+}
+	
+\end{lstlisting}

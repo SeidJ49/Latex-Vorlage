@@ -1,0 +1,62 @@
+% ------------------------------------------------------------------------
+% LaTeX - Preambel ******************************************************
+% ------------------------------------------------------------------------
+% pre-work
+% ========================================================================
+% % ToDo kennzeichnen
+\newcommand{\workTodo}[1]{\textcolor{red}{todo: #1}}
+
+% % Für Datum und Zeit in Fusszeile
+% % !!!Inhalt bei Fertigstellung der Arbeit löschen
+\newcommand{\workMarkDateTime}{\today{}}
+
+% % Alle Namen werden im Titel und im hyperref-Paket eingetragen
+% % !!! Ueberall für <Wert> das Entsprechende eintragen
+
+% <Fakultaet> In Welcher Fakultät wurde die Arbeit erstellt 
+\newcommand{\workFakultaet}{Informatik und Informationstechnik}
+
+% <Typ> Studienarbeit, Dipolmarbeit, Studienarbeit oder Bachlor-Abschlussarbeit
+\newcommand{\workTyp}{Studienarbeit}
+
+% <Studiengang> z.B. Kommunikationstechnik
+\newcommand{\workStudiengang}{Technische Informatik}
+
+% <Titel> der Arbeit
+\newcommand{\workTitel}{Visualisierung eines echtzeitf\"ahigen Routenplan-Algorithmus}
+
+% <Semester> mit Jahr z.B. Sommersemester 2008  
+\newcommand{\workSemester}{Sommersemester 2023}
+
+% <Name> des Studenten
+\newcommand{\workNameStudent}{Seid Jadadic}
+
+% <Pruefer> Name des prüfenden (betreuenden) Professor an der Hochschule
+\newcommand{\workErstPruefer}{Prof. Dr. Reiner Marchthaler} 
+
+% <Zweitprüfer>
+\newcommand{\workZweitPruefer}{Prof. Dr. J\"urgen Koch}
+
+% %%% Nur bei Abschluss-Arbeiten
+
+% <Datum> der Abgabe der Arbeit (Eidesstatliche Erklärung)
+\newcommand{\workDatum}{\today\xspace}
+
+% <Ort> Standort der erstellten Arbeit 
+
+\newcommand{\workOrt}{Esslingen}
+
+% <Zeitraum>
+\newcommand{\workZeitraum}{\workTodo{<Zeitraum>}\xspace}
+
+
+% %%% Nur bei Industrie-Arbeiten:
+
+% <Firma>
+\newcommand{\workFirma}{\workTodo{<Firma>}\xspace}
+
+% <Betreuer in der Firma>
+\newcommand{\workFirmenBetreuer}{\workTodo{<Betreuer in der Firma>}\xspace}
+
+% Firmenlogo Name hier anpassen, Größe (wenn möglich) nicht ändern
+\newcommand{\workFirmenLogo}{\includegraphics[width=5cm]{fig/aa-titel/Bosch_4C_S}} 

@@ -1,0 +1,15 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'Studienarbeit_Bericht.blg'
+[231] biber-MSWIN64:340> INFO - === 
+[292] Biber.pm:419> INFO - Reading 'Studienarbeit_Bericht.bcf'
+[471] Biber.pm:976> INFO - Using all citekeys in bib section 0
+[496] Biber.pm:4419> INFO - Processing section 0
+[517] Biber.pm:4610> INFO - Looking for bibtex file 'literatur.bib' for section 0
+[610] bibtex.pm:1713> INFO - LaTeX decoding ...
+[643] bibtex.pm:1519> INFO - Found BibTeX data source 'literatur.bib'
+[777] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'variable = shifted' with 'variable = non-ignorable'
+[777] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[777] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'de-DE'
+[777] Biber.pm:4245> INFO - No sort tailoring available for locale 'de-DE'
+[787] bbl.pm:660> INFO - Writing 'Studienarbeit_Bericht.bbl' with encoding 'latin1'
+[790] bbl.pm:763> INFO - Output to Studienarbeit_Bericht.bbl

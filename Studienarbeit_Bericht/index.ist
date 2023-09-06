@@ -1,0 +1,25 @@
+% index.ist - Eine Index-Vorlage für den deutschsprachigen Raum
+% quote umdefinieren für deutsche Sortierung (makeindex -g)
+quote '+'
+% Grossbuchstaben um Abschnitte zu markieren (>0)
+% 0 für keine Markierung, <0 für Kleinbuchstaben
+headings_flag 1
+% Formatierung der Abschnittsmarkierungen
+heading_prefix "{\\sffamily\\bfseries "
+heading_suffix "}\\nopagebreak%\n \\indexspace\\nopagebreak%"
+% Abschnittsmarkierung für Symbole auf Deutsch
+symhead_negative "symbole"
+symhead_positive "Symbole"
+% Abschnittsmarkierung für Nummern auf Deutsch
+numhead_negative "nummern"
+numhead_positive "Nummern"
+% Trennzeichen umdefinieren (Standard Trennzeichen ist ", ")
+delim_0 "\\dotfill "
+delim_1 "\\dotfill "
+delim_2 "\\dotfill "
+% Trennzeichen für "von ... bis ..." auf "--" setzen mit gesperrten Leerzeichen
+delim_r "~--~"
+% Wenn auf mehr als 2 aufeinanderfolgenden Seiten dann mit "f." umschreiben
+suffix_2p "\\,f."
+% Wenn auf mehr als 3 aufeinanderfolgenden Seiten dann mit "ff." umschreiben
+suffix_3p "\\,ff."

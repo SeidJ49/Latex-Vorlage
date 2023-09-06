@@ -1,0 +1,131 @@
+\chapter{Datenstrukturen und Implementierungsdetails}
+
+\section{Einlesen einer GraphML-Datei}
+Dieses Kapitel behandelt das Einlesen einer GraphML-Datei und die Strukturierung der darin enthaltenen Knoten- und Kanteninformation. \\
+GraphML ist ein XML-basiertes Dateiformat, das häufig zur Darstellung von gerichteten und ungerichteten Graphen verwendet wird. Die Verarbeitung von GraphML-Dateien ist in verschiedenen Anwendungsbereichen wie Netzwerkvisualisierung, soziale Netzwerkanalyse oder Routenplanung unerlässlich. 
+
+Das Kapitel beginnt mit einer Analyse der GraphML-Struktur, um ein Verständnis dafür zu entwickeln, wie die Knoten- und Kanteninformationen in der Datei organisiert sind. Darauf aufbauend werden die Funktionen und Variablen in der Header-Datei \glqq car\_readFile.hpp\grqq{} erläutert, die Teil der Klasse ReadFile sind. Diese Klasse wurde speziell entwickelt, um die GraphML-Datei zu öffnen, zu lesen und die darin enthaltenen Daten effizient in einer unordered\_map zu speichern. 
+
+Die Details der Implementierung der Klasse sind in der Datei \glqq car\_readFile.cpp\grqq{} beschrieben. Die Methode readFile() spielt eine zentrale Rolle und ermöglicht es, die Informationen aus der GraphML-Datei zu extrahieren und in der Datenstruktur abzulegen.  
+
+\subsection{Struktur einer GraphML-Datei}
+Die Struktur einer GraphML-Datei ist in Abbildung \ref{fig:graphmldat} dargestellt. Es handelt sich um ein XML-Dokument, das Informationen über einen gerichteten Graphen enthält. Jeder Knoten des Graphen wird durch eine eindeutige ID identifiziert. Für jeden Knoten gibt es zwei Schlüssel, die jeweils den x- und y-Koordinaten des Knotens entsprechen. \\
+Der Wert des Schlüssels \glqq d0\grqq{} gibt die x-Koordinate des Knotens an, während der Wert des Schlüssels \glqq d1\grqq{} die y-Koordinate des Knotens angibt.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{bilder/graphml_datei.png}
+	\caption{Struktur einer GraphML-Datei}
+	\label{fig:graphmldat}
+\end{figure}
+
+Es gibt auch einen Kantenschlüssel (\glqq d2\grqq{}), der einen booleschen Wert enthält, der angibt, ob die Fahrbahn mehrspurig ist oder nicht. Damit ist ein Spurwechsel möglich. Der Graph selbst ist als \glqq gerichtet\grqq{} definiert, was bedeutet, dass jeder Knoten des Graphen Kanten zu anderen Knoten hat, diese Kanten aber nur in eine Richtung verlaufen.
+
+\subsection{Die Header-Datei \glqq car\_readFile.hpp\grqq{} und ihre Funktionen}
+
+Die Header-Datei enthält die Definitionen der Klasse ReadFile, die zum Lesen und Verarbeiten von GraphML-Dateien verwendet wird. Die Datei beginnt mit Präprozessor-\\anweisungen, um ein mehrfaches Einbinden der Datei zu verhindern. Anschließend werden verschiedene Header-Dateien der Standardbibliothek eingebunden, die für die Funktionalität der Klasse erforderlich sind. Die ReadFile-Klasse selbst ist in der Datei definiert.
+\subsubsection{Datenstruktur \glqq NodeData\grqq}
+Vor der Definition der Klasse ReadFile wird die Datenstruktur \glqq NodeData\grqq{} definiert, die Informationen über einen Knoten im Graphen enthält. Ein \glqq NodeData\grqq-Objekt besteht aus drei Attributen: 
+\begin{itemize}
+	\item \glqq m\_id\grqq{}: Eine 16-Bit unsigned Integer-Variable zur Speicherung der x- und y-Koordinaten des Knotens.  
+	\item \glqq m\_x\grqq{} und \glqq m\_y\grqq{}: Float-Variablen zur Speicherung der x- und y-Koordinaten des Knotens. 
+	\item \glqq connectedNodes\grqq{}: Ein Vektor von Integerwerten, der die IDs der Knoten enthält, die mit diesem Knoten verbunden sind. 
+\end{itemize}
+
+Die Struktur enthält auch einen Konstruktor, um die Initialisierung von \glqq NodeData\grqq-Objekten mit den gegebenen Werten zu erleichtern, sowie einen überladenen Operator \glqq $<$\grqq{}, um die Sortierung der Knoten nach ihrer ID zu ermöglichen.
+\newpage
+\subsubsection{Klasse \glqq ReadFile\grqq}
+Die Klasse selbst ist nun definiert. Sie enthält verschiedene öffentliche und geschützte Methoden und Variablen zum Lesen und Speichern von GraphML-Daten.\\
+Es stehen zwei Konstruktoren zur Verfügung: \\
+Der Standardkonstruktor \glqq ReadFile()\grqq{} initialisiert die Variable \glqq m\_filename\grqq{} mit einem vorgegebenen Dateinamen \glqq c\_filename\grqq{}. \\
+Der zweite Konstruktor \glqq ReadFile(string filename)\grqq{} akzeptiert einen Dateinamen als Parameter und weist diesen der Variablen \glqq m\_filename\grqq{} zu.
+
+Die öffentlichen Methoden sind: 
+\begin{enumerate}
+	\item \glqq readFile()\grqq{}: Dies ist der Hauptteil der Klasse, in dem die GraphML-Datei geöffnet, gelesen und die Knoten und Kanten in einer \glqq unordered\_map\grqq{} namens \glqq m\_nodes\grqq{} gespeichert werden.
+	
+	\item \glqq setFilename(string filename)\grqq{}: Mit dieser Methode kann der Dateiname der GraphML-Datei nachträglich geändert werden.
+	
+	\item \glqq getNodes()\grqq{}: Diese Methode gibt eine \glqq unordered\_map\grqq{} zurück, das die Informationen über die gelesenen Knoten enthält.
+\end{enumerate}
+
+Die geschützte Methoden dienen dazu, bestimmte Teile des Leseprozess für Knoten und Kanten aus der GraphML-Datei zu isolieren und zu verarbeiten.
+\begin{enumerate}
+	\item \glqq readNodeDataFromFile()\grqq{}: Diese Methode extrahiert die Daten eines einzelnen Knotens aus der GraphML-Datei. Sie liest die Zeilen der Datei, bis die Daten des Knotens vollständig gelesen sind und speichert sie dann im Objekt \glqq m\_currentNode\grqq{} vom Typ \glqq NodeData\grqq{}.
+	
+	\item \glqq readEdgeDataFromFile()\grqq{}: Diese Methode extrahiert die Daten einer einzelnen Kante aus der GraphML-Datei. Sie liest die Zeilen der Datei, bis die Daten der Kante vollständig gelesen sind und aktualisiert dann die Verbindungen des entsprechenden Quellknotens in der \glqq unordered\_map\grqq{}.
+\end{enumerate}
+\newpage
+Die geschützten Variablen werden verwendet, um temporäre und während des Lesens relevante Daten zu speichern. 
+
+\begin{enumerate}
+	\item \glqq m\_currentNode\grqq{}: Ein Objekt vom Typ \glqq NodeData\grqq{}, das die Daten eines Knotens temporär speichert, während sie aus der Datei gelesen werden.
+	
+	\item \glqq m\_nodes\grqq{}: Eine \glqq unordered\_map\grqq{}, die die Informationen über die gelesenen Knoten speichert. Der Schlüssel ist die ID des Knotens (uint16\_t) und der Wert ist das entsprechende \glqq NodeData\grqq{}-Objekt. 
+	
+	\item \glqq graphMlFile\grqq{}: Ein Dateistream, der die GraphML-Datei repräsentiert, die zum Lesen der Daten geöffnet wird.
+	
+	\item \glqq m\_filename\grqq{}: Eine Zeichenkette, die den Dateinamen der GraphML-Datei enthält.
+	
+	\item \glqq m\_currentLine\grqq{}: Eine Zeichenkette, die die aktuelle Zeile darstellt, während die Datei Zeile für Zeile durchlaufen wird.
+\end{enumerate}
+
+\subsection{Implementierung des GraphML-Einleseprozess}
+Die Methode \glqq ReadFile::readFile()\grqq{} bildet den Hauptteil der Implementierung und ist für das eigentliche Einlesen der GraphML-Datei verantwortlich. Sie öffnet die GraphML-Datei mit dem in \glqq m\_filename\grqq{} gespeicherten Namen und geht diese Zeile für Zeile durch. Dabei werden die Informationen über jeden Knoten und jede Kante extrahiert und in \glqq m\_nodes\grqq{} gespeichert. Diese Datenstruktur ermöglicht einen schnellen Zugriff auf die Graphendaten und erleichtert spätere Analysen. 
+
+Zunächst wird die GraphML-Datei geöffnet, deren Name in der Member-Variablen \glqq m\_filename\grqq{} gespeichert ist. Dies ermöglicht den Zugriff auf die in der Datei enthaltenen Daten. Das Öffnen erfolgt über den C++-Standard-Dateistream fstream, der zum Lesen und Schreiben von Dateien verwendet wird. Dabei wird die Datei im Lesemodus (d.h. als Eingabedatei) geöffnet, um ihren Inhalt lesen zu können. Nach dem Aufruf von \glqq open()\grqq{} ist die GraphML-Datei geöffnet und der Datei-Stream \glqq graphMlFile\grqq{} kann auf die Datei zugreifen.
+\newpage
+Kann die Datei nicht erfolgreich geöffnet werden, z.B. weil sie nicht existiert oder die Zugriffsrechte fehlen, wird eine Fehlermeldung ausgegeben und eine Exception geworfen, um den ordnungsgemäßen Ablauf zu gewährleisten. 
+
+Anschließend wird die Datei Zeile für Zeile durchsucht. Jede Zeile wird daraufhin überprüft, ob sie einen Knoten oder eine Kante darstellt. Dies geschieht mit Hilfe der Tags \glqq $<$node$>$\grqq{} und \glqq $<$edge$>$\grqq{}, die jeweils den Beginn eines Knotens bzw. einer Kante markieren. 
+
+Wenn die aktuelle Zeile einen Knoten darstellt, werden die Daten dieses Knotens aus der Zeile extrahiert. Dabei werden  Informationen wie die eindeutige Knoten-ID sowie die x- und y-Koordinaten aus den entsprechenden Tags und Attributen ausgelesen und in der Variable \glqq m\_currentNode\grqq{} gespeichert. 
+
+Nachdem die Knotendaten vollständig eingelesen wurden, wird der aktuelle Knoten in \glqq m\_nodes\grqq{} gespeichert. Die Knoten-ID dient dabei als Schlüssel, um später einfach auf die gespeicherten Knoten zugreifen zu können. 
+
+Gleiches gilt für die Extraktion der Kanteninformation. Wenn die aktuelle Zeile eine Kante darstellt, wird die Information dieser Kante aus der Zeile extrahiert. Die Quell- und Zielknoten der Kante werden ermittelt und die entsprechenden Verbindungen in \glqq m\_nodes\grqq{} aktualisiert. Dadurch wird die Beziehung zwischen den Knoten im Graphen festgehalten. 
+
+Nachdem alle Zeilen der Datei durchgelaufen wurden, ist der Einlesevorgang abgeschlossen und die Methode \glqq readFile\grqq{} wird beendet. Die Daten über die Knoten und ihre Verbindungen sind nun in \glqq m\_nodes\grqq{}  gespeichert und stehen für weitere Verarbeitungsschritte zur Verfügung.
+
+\newpage
+\section{Implementierung des A*-Algorithmus}
+
+\subsection{Die Header-Datei \glqq car\_algorithm.hpp\grqq{} und ihre Funktionen}
+Die Header-Datei enthält die Definition der Klasse, die den A*-Algorithmus implementiert. In der Header-Datei wird auch die Node-Struktur definiert, mit der die Knoten und ihre Bewertungen verwaltet werden. 
+
+Mehrere Funktionen sind in der Klasse \glqq AStarAlgorithm\grqq{} deklariert: 
+
+\begin{itemize}
+	\item Die Funktion \glqq heuristic(NodeData\& nodeA, nodeData\& nodeB)\grqq{}, die die heuristische Bewertung zwischen zwei Knoten berechnet. Die Heuristik wird verwendet, um die verbleibenden Kosten vom aktuellen Knoten zum Zielknoten abzuschätzen. 
+	
+	\item Die Hauptfunktion \glqq aStarAlgorithm(int startId, int goalId)\grqq{}, die den A*-Algori-\\thmus ausführt, um den kürzesten Weg zwischen den Knoten mit den IDs \\ 
+	\glqq startId\grqq{} (Startknoten) und \glqq goalId\grqq{} (Zielknoten) zu berechnen.
+	
+	\item Die Funktion \glqq getPath()\grqq{}, die den berechneten kürzesten Pfad als Vektor von Knoten-IDs zurückgibt. 
+	
+	\item Die Funktion \glqq getReadFile()\grqq{}, die eine Referenz auf das \glqq ReadFile\grqq-Objekt zurückgibt, um auf die eingelesenen Graphendaten zugreifen zu können.
+\end{itemize}
+
+\subsection{Implementierung}
+Die Implementierung des A*-Algorithmus ist in der Datei \glqq car\_Algorithm.cpp\grqq{} enthalten. 
+Die Hauptfunktion \glqq aStarAlgorithm(int startId, int goalId)\grqq{} beinhaltet die Implementierung des A*-Algorithmus zur Suche des kürzesten Weges zwischen einem Start- und einem Zielknoten in einem gegebenen Graphen.
+
+\newpage
+Zu Beginn der Funktion werden zwei Hash-Maps \glqq gScores\grqq{} und \glqq cameFrom\grqq{} erzeugt, die die $g$-Werte ($g(x)$), welche die bisher kumulierten Kosten für den Weg vom Startknoten zum betrachteten Knoten repräsentieren, und die Vorgängerinformationen für jeden Knoten während des Suchprozesses speichern. 
+
+Der A*-Algorithmus arbeitet in einer Schleife, die solange ausgeführt wird, bis die Prioritätswarteschlange \glqq openSet\grqq{} leer ist oder der Zielknoten erreicht wurde. \\
+Bei jedem Schleifendurchlauf wird der Knoten mit der niedrigsten $f$-Bewertung (für den Zielknoten) aus der Warteschlange \glqq openSet\grqq{} genommen und als aktueller Knoten betrachtet. Die $f$-Bewertung eines Knotens ergibt sich aus der Summe des $g$-Wertes (kumulierte Kosten vom Startknoten zum aktuellen Knoten) und des $h$-Wertes (heuristische Bewertung der geschätzten Kosten vom aktuellen Knoten zum Zielknoten). Die heuristische Bewertung wird mit Hilfe der Funktion \glqq heuristic(NodeData\& nodeA, nodeData\& nodeB)\grqq{} berechnet, die die euklidische Distanz zwischen den beiden Knoten \glqq nodeA\grqq{} und \glqq nodeB\grqq{} im 2D-Raum zurückgibt. \\
+Die euklidische Distanz wird als heuristische Funktion verwendet, um die Luftliniendistanz zwischen den Knoten zu bestimmen und so eine optimistische Schätzung der verbleibenden Kosten zu erhalten. 
+
+Wenn der aktuelle Knoten den Zielknoten darstellt, wurde der kürzeste Pfad gefunden und der Rekonstruktionsprozess wird gestartet, um den Pfad zurückzuverfolgen und die Knoten-IDs in den Vektor \glqq m\_path\grqq{} einzufügen. Auf diese Weise enthält der Vektor den berechneten kürzesten Pfad, der den Weg vom Startknoten zum Zielknoten repräsentiert.
+
+Falls der Zielknoten noch nicht erreicht wurde, werden die Nachbarn des aktuellen Knotens betrachtet und deren $g$- und $f$-Werte entsprechend aktualisiert. Ist der Nachbarknoten noch nicht in im \glqq gScores\grqq{} enthalten oder wurde ein besserer Weg zu diesem Knoten gefunden, wird der Nachbarknoten in die Prioritätswarteschlange \glqq openSet\grqq{} aufgenommen. Die Warteschlange organisiert die Knoten in aufsteigender Reihenfolge ihrer $f$-Werte, wodurch der Algorithmus die vielversprechendsten Knoten für die Expansion priorisiert. \\
+Die Vorgängerinformation wird ebenfalls in der Hash-Map \glqq cameFrom\grqq{} aktualisiert.
+
+\newpage
+Der A*-Algorithmus verwendet die heuristische Bewertung, um den besten nächsten Knoten für die Expansion auszuwählen und somit den Pfad zu optimieren. Durch diese optimierte Expansionsstrategie sucht der Algorithmus effizienter nach dem kürzesten Pfad, indem er die vielversprechendsten Knoten zuerst untersucht, was die Anzahl der betrachteten Knoten und damit die Gesamtlaufzeit des Algorithmus reduziert.
+
+Am Ende der Schleife enthält der Vektor \glqq m\_path\grqq{} den berechneten kürzesten Pfad, der den Weg vom Startknoten zum Zielknoten darstellt. Dieses Ergebnis kann zur Navigation durch das Graphennetz verwendet werden, z.B. zur Routenplanung in Navigationsanwendungen oder zur Navigation autonomer Fahrzeuge auf Straßennetzen. Die Verwendung des A*-Algorithmus ermöglicht es, den optimalen Pfad unter Berücksichtigung der Heuristik effizient zu finden und somit den Ressourcenverbrauch und die Gesamtfahrzeit zu minimieren.
+
+
+\newpage

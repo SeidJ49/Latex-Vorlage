@@ -1,0 +1,101 @@
+\documentclass[
+BCOR=5mm,           % Binderkorrektur von 5mm vorsehen
+fontsize=11pt,      % Schriftgröße 11 Punkte
+oneside,            % Einseitig
+parskip,            % Paragraphen nicht einrÃ¼cken
+headsepline,        % Kopfzeile nach unten durch Linie abgrenzen (scrheadings)
+%footbotline,       % Fußzeile nach unten durch Linie abgrenzen (scrheadings)
+plainheadsepline,   % Kopfzeile nach unten durch Linie abgrenzen (scrplain)
+plainfootbotline,   % Fußzeile nach unten durch Linie abgrenzen (scrplain)
+%headtopline,       % Kopfzeile nach oben durch Linie abgrenzen (scrheadings)
+footsepline,        % Fußzeile nach oben durch Linie abgrenzen (scrheadings)
+plainheadtopline,   % Kopfzeile nach oben durch Linie abgrenzen (scrplain)
+plainfootsepline,   % Fußzeile nach oben durch Linie abgrenzen (scrplain)
+]{scrbook}          % Koma-Script Klasse zum setzen eines Buchs
+
+
+\usepackage{lmodern}
+
+% Die "Standard-Header" für deutsche Dokumente
+\usepackage[latin1]{inputenc}    % ISO-8859-1 bzw. Latin1 als Encoding
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}         % T1 Schriften verwenden (sieht besser aus)
+\usepackage[ngerman]{babel}      % Neue deutsche Rechtschreibung 
+\usepackage{ifpdf} % Fuer Pakete/Paketoptionen, die nur fuer pdf benoetigt werden \ifpdf \else \fi
+
+% "Schönere" Schriften einbinden
+%\usepackage{mathpazo}            % Serifen-Font mit passendem Math-Font
+%\usepackage[scaled=.95]{helvet}  % Serifenloser Font passend zu mathpazo
+%\usepackage{courier}             % "Schönerer" Festbreiten-Font
+
+% Koma-Script Paket zum setzen vom Kopf- und Fußzeilen einbinden
+%\usepackage{scrpage2}
+\usepackage{scrlayer-scrpage}
+\RequirePackage{scrlfile}
+\ReplacePackage{scrpage2}{scrlayer-scrpage}
+\usepackage{substr}
+
+%\pagestyle{scrheadings}
+\clearpairofpagestyles
+\automark[section]{chapter}
+
+\ohead[\sffamily\scshape\bfseries\large\headmark]
+{\sffamily\scshape\bfseries\large\headmark}
+
+\ofoot[\sffamily\thepage]{\sffamily\thepage}
+
+\usepackage{listings}
+\lstset{
+captionpos=b,                % Beschriftung unterhalb (bottom)
+numbers=left,                % Zeilennummern links
+frame=trbl,                  % Rahmen zeichnen (top, right, bottom, left)
+basicstyle=\small\ttfamily,  % Festbreitenschrift verwenden (small)
+language=Java                % Sprache auf Java einstellen
+}
+
+\usepackage[ngerman]{translator}
+
+\usepackage[
+nonumberlist, % Keine Seitenzahlen anzeigen
+acronym,      % Abkürzungsverzeichnis erstellen
+toc,          % In Inhaltsverzeichnis aufnehmen
+%section       % Verzeichniseintrag als Section
+]{glossaries}
+
+% Ein eigenes Verzeichnis definieren (Smbolverzeichnis)
+% Das Stichwort- und AbkÃ¼rzungsverzeichnis wird analog vordefiniert
+% Siehe makeindex Aufrufe - Hier werden die Dateiendungen festgelegt
+\newglossary[slg]{symbolslist}{syi}{syg}{Symbolverzeichnis}
+
+\makeglossaries
+
+
+% Paket zum generieren von Blindtext
+\usepackage{blindtext}
+
+% Paket zum Einbinden von Bildern
+\usepackage{graphicx}
+
+%              
+% WORKAROUND, damit lstlistoflistings funktioniert:
+% Quelle: http://www.komascript.de/node/477
+%
+\makeatletter
+\@ifundefined{float@listhead}{}{%
+    \renewcommand*{\lstlistoflistings}{%
+        \begingroup
+    	    \if@twocolumn
+                \@restonecoltrue\onecolumn
+            \else
+                \@restonecolfalse
+            \fi
+            \float@listhead{\lstlistlistingname}%
+            \setlength{\parskip}{\z@}%
+            \setlength{\parindent}{\z@}%
+            \setlength{\parfillskip}{\z@ \@plus 1fil}%
+            \@starttoc{lol}%
+            \if@restonecol\twocolumn\fi
+        \endgroup
+    }%
+}
+\makeatother

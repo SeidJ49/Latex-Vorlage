@@ -1,0 +1,171 @@
+\chapter{Evaluierung und Performance Analyse}
+
+\section{Validierung und Testen der Implementierung}
+In diesem Abschnitt gilt es, die implementierten Funktionen und den Routenplanungs-\\algorithmus zu validieren und zu testen. Das Testen ist ein entscheidender Schritt in der Softwareentwicklung, der sicherstellt, dass der Code zuverlässig und fehlerfrei funktioniert.
+
+Um die Funktionsfähigkeit der Implementierung sicherzustellen, wurden verschiedene Unit-Tests entwickelt. Diese Tests überprüfen, ob die implementierten Funktionen die erwarteten Ergebnisse liefern und ob die Daten korrekt in den dafür vorgesehenen Datenstrukturen gespeichert werden. 
+
+Die Unit-Tests wurden mit dem Google Test Framework durchgeführt, einem leistungsfähigen Werkzeug zur Erstellung automatisierter Tests für C++-Programme. Dieses Framework ermöglicht die Definition und Ausführung von Testfällen, um sicher\-zustellen, dass die einzelnen Komponenten korrekt funktionieren. 
+
+\subsection{Testframework Google Test}
+Google Test ist ein Framework für automatisierte Tests in C++. Es wurde von Google
+entwickelt und ist Open-Source. Durch die Verwendungen des Google Test Frameworks können Entwickler sicherstellen, dass die Funktionalität der Klasse bei Änderungen oder Updates nicht beeinträchtigt wird und die Anforderungen der Anwendung erfüllt werden. Die Testsuite bietet eine wichtige Komponente für die Softwareentwicklung, um die Zuverlässigkeit und Qualität der Implementierung sicherzustellen.
+
+Ein wichtiger Bestandteil von Google Test sind Testfälle. Testfälle sind einzelne
+Testfunktionen, die bestimmte Aspekte des Codes überprüfen. Jeder Testfall besteht aus
+einer Reihe von Test-Assertions, die sicherstellen, dass bestimmte Bedingungen erfüllt
+sind. Wenn eine Assertion fehlschlägt, wird der Test als fehlgeschlagen markiert.
+
+Ein weiteres nützliches Feature ist die Möglichkeit, testinterne Daten zu sammeln und
+auszuwerten. Mit Google Test können Entwickler beispielsweise die Ausführungszeit
+jedes Tests messen und protokollieren.
+
+Es bietet auch eine Unterstützung für das parallele Ausführen von Tests. So können
+Entwickler mehrere Tests gleichzeitig ausführen, um die Ausführungszeit zu verkürzen
+und die Ressourcenauslastung zu minimieren.
+
+Google Test bietet auch Unterstützung für die Organisation von Testfällen in
+Test-Fixtures. Ein Fixture ist eine Klasse oder Struktur, die als Grundlage für Tests
+verwendet wird. Es stellt gemeinsame Daten und Funktionalitäten bereit, die von
+mehreren Testfällen genutzt werden können. \\
+In Abbildung \ref{fig:bspTestFixture} ist ein Beispiel eines Test-
+Fixtures zu sehen.
+
+\begin{figure}[h]
+	\centering
+	\begin{lstlisting}
+#include <gtest/gtest.h>
+#include "driver_assist.h"
+	
+class DriverAssistTests : public ::testing::test
+{
+	protected: 
+	DriverAssist driverAssist;
+};
+		
+TEST_F(DriverAssistTests, CheckSpeed)
+{
+	int speedLimit          = 60;
+	int currentSpeed        = 55; 
+	bool isSpeedWithinLimit = driverAssist.CheckSpeed(currentSpeed, speedLimit); 
+	EXPECT_TRUE(isSpeedWithinLimit);	
+}
+	\end{lstlisting}
+	\caption{Beispiel für ein Test-Fixture}
+	\label{fig:bspTestFixture}
+\end{figure}
+
+In diesem Beispiel wird eine Klasse \glqq DriverAssistTest\grqq{} als Fixture verwendet. \\
+Diese Klasse stellt eine Instanz der Klasse \glqq DriverAssist\grqq{} bereit.
+
+\glqq TEST\_F\grqq{} wird verwendet, um einen Testfall für die Funktion \glqq CheckSpeed\grqq{} durchzuführen. In diesem Test wird das Geschwindigkeitslimit auf 60 gesetzt und die
+aktuelle Geschwindigkeit auf 55 geprüft. Da die aktuelle Geschwindigkeit unter dem
+Geschwindigkeitslimit liegt, sollte die \glqq CheckSpeed\grqq{} \glqq true\grqq{} zurückgeben. Der
+Rückgabewert wird von dem Google Testframework überprüft.
+
+Ein weiters Feature von Google Test ist die Möglichkeit, Tests mit Parametern
+auszuführen. Mit dieser Funktion können Entwickler einen Test mehrfach mit
+unterschiedlichen Eingabewerten ausführen, ohne dass sie mehrere Testfunktionen
+erstellen müssen. Um einen parametrisierten Test durchzuführen, muss das Fixture wie
+in Abbildung \ref{fig:bspParamTest} zu sehen ist, erweitert werden.
+
+In diesem Beispiel wird das Fixture \glqq DriverAssistTest\grqq{} erweitert, um ein Tupel aus drei
+Werten als Parameter zu verwenden. Hierfür wird das Makro \glqq TEST\_P\grqq{} verwendet, um
+den Test auszuführen. Die Parameter werden dabei über \glqq GetParam\grqq{} bereitgestellt und
+können über die Funktion \glqq std::get\grqq{} abgerufen werden.
+
+\begin{figure}[h]
+	\centering
+	\begin{lstlisting}
+TEST_P(DriverAssistTests, CheckSpeed)
+{
+	int speedLimit          = GetParam(); 
+	int currentSpeed        = GetParam(); 
+	bool expectedResult     = GetParam(); 
+	bool isSpeedWithinLimit = driverAssist.CheckSpeed(currentSpeed, speedLimit); 
+	EXPECT_TRUE(isSpeedWithinLimit);	
+}
+		
+INSTANTIATE_TEST_CASE_P(CheckSpeedTests, DriverAssistTest, 
+	::testing::Values(
+	std::make_tuple(70, 55, true),
+	std::make_tuple(70, 75, false),
+	std::make_tuple(30, 32, false),
+	std::make_tuple(30, 30, true) 
+))
+	\end{lstlisting}
+	\caption{Beispiel für ein parametrisierten Test}
+	\label{fig:bspParamTest}
+\end{figure}
+
+Mit der Instruktion \glqq INSTANTIATE\_TEST\_CASE\_P\grqq{} werden mehrere Testfälle mit
+unterschiedlichen Parametern erstellt. In diesem Beispiel werden vier Testfälle erstellt,
+bei denen jeweils ein unterschiedliches Tupel mit Geschwindigkeitslimit, aktueller
+Geschwindigkeit und dem erwarteten Ergebnis übergeben wird.
+
+\subsection{Testfälle zum Einlesen der GraphML-Datei}
+
+Die Datei \glqq unittest\_readFile.hpp\grqq{} enthält eine Testsuite für die Klasse \glqq ReadFile\grqq. Die Testsuite wurde mit dem Testframework Google Test erstellt und enthält zwei Testfälle, \glqq readTest1\grqq{} und \glqq readTest2\grqq{}, um die Funktionalität der Klasse \glqq ReadFile\grqq{} zu überprüfen.
+
+Die Klasse \glqq carReadFile\_Fixture\grqq{} wird als Test-Fixture erstellt, indem sie aus der Klasse \glqq testing::Test\grqq{} und der Klasse \glqq ReadFile\grqq{} abgeleitet wird. Die Verwendung einer Test-Fixture ermöglicht die gemeinsame Nutzung von Ressourcen und Funktionen zwischen den Testfällen. 
+
+Innerhalb der Test-Fixture werden zwei Membervariablen definiert, \glqq m\_ReadFile\grqq{} und \glqq m\_testNodes\grqq. Die Variable \glqq m\_ReadFile\grqq{} wird verwendet, um eine Instanz der Klasse \glqq ReadFile\grqq{} zu erzeugen und die Funktionalität der Dateieinlesefunktionen zu testen. Die Variable \glqq m\_testNodes\grqq{} wird verwendet, um Testdaten in Form von \glqq NodeData\grqq-Objekten zu speichern, die später in den Testfällen verwendet werden. 
+
+Der erste Testfall ist definiert. In diesem Testfall werden die Dateilesefunktionen der Klasse getestet, indem eine benutzerdefinierte Test-GraphML-Datei eingelesen wird. Zuerst werden Testdaten in Form eines \glqq NodeData\grqq-Objektes erzeugt und im \glqq m\_testNodes\grqq-Vektor gespeichert. Dann wird der Dateiname für die Test-GraphML-Datei mit \glqq m\_ReadFile.setFilename()\grqq{} gesetzt. Danach wird erwartet, das die Datei ohne Fehler gelesen wird, indem das Makro \glqq EXPECT\_NO\_THROW\grqq{} verwendet wird. Schließlich wird das Ergebnis der Dateieinlesefunktion in einer Variable gespeichert und es werden verschiedene \glqq EXPECT\_EQ\grqq-Anweisungen verwendet, um sicherzustellen, dass die gelesenen Knotendaten mit den erwarteten Testdaten übereinstimmen. 
+\newpage
+Der zweite Testfall ist ähnlich wie der erste, unterscheidet sich aber darin, dass er eine andere Test-GraphML-Datei verwendet und zusätzliche Testdaten für mehrere Knoten enthält. Die Funktionsweise des Testfalls ist im Wesentlichen die gleiche, aber es wird eine Schleife verwendet, um mehrere Knoten zu überprüfen. 
+
+Dieser Code stellt sicher, dass die Klasse korrekt funktioniert und die gelesenen Daten korrekt gespeichert werden. 
+
+\subsection{Testfälle für die Implementierung des A*-Algorithmus}
+
+In der Datei \glqq unittest\_Algorithm.cpp\grqq{} ist eine vollständige Testsuite für die Implementierung des A*-Algorithmus enthalten. Die Testsuite besteht aus drei Testfällen, \glqq simpleAStarTest1\grqq, \glqq simpleAStarTest2\grqq{} und \glqq crossParking\grqq. Das Hauptziel dieser Testsuite ist es, die Funktionalität des A*-Algorithmus zu überprüfen und sicherzustellen, dass er in verschiedene Szenarien korrekte Ergebnisse liefert.
+
+Der erste Testfall überprüft den A*-Algorithmus anhand eines einfachen Beispiels. Der Algorithmus soll den kürzesten Weg zwischen den Knoten 115 und 118 des Graphen in Abbildung \ref{fig:testTrack} finden. Dazu wird die Dateilesefunktion der Klasse \glqq ReadFile \grqq{} verwendet, um die Graphendaten aus der GraphML-Datei einzulesen. Anschließend wird der A*-Algorithmus mit dem Start- und Zielknoten 115 und 118 aufgerufen und der berechnete Pfad mit einem vordefinierten erwarteten Pfad verglichen. Ist der tatsächliche Pfad leer (kein Pfad gefunden), wird eine Fehlermeldung ausgegeben. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=10cm]{bilder/Test_track.png}
+	\caption{Test-Track}
+	\label{fig:testTrack}
+\end{figure}
+
+Der zweite Testfall testet den Algorithmus an einem weiteren einfachen Beispiel. Der Algorithmus soll im gegebenen Graphen den kürzesten Weg zwischen den Knoten 57 und 17 finden. Dazu werden wie im vorherigen Testfall die Dateilesefunktion und der A*-Algorithmus aufgerufen und berechnete Pfad mit einem erwarteten Pfad verglichen. 
+
+Der dritte Testfall überprüft den A*-Algorithmus anhand eines komplexeren Beispiels. Dazu wird eine weitere GraphML-Datei eingelesen. Auch hier werden die Dateilesefunktion und der A*-Algorithmus aufgerufen und der berechnete Pfad mit einem vordefinierten Pfad verglichen. 
+\newpage
+Die Testfälle dienen dazu, die Korrektheit und Effizienz der Implementierung des A*-Algorithmus zu überprüfen und sicherzustellen, dass er für verschiedene Szenarien korrekte Ergebnisse liefert. Wenn die tatsächlichen Pfade mit den erwarteten Pfaden übereinstimmen, gelten die Tests als erfolgreich. Andernfalls wird eine Fehlermeldung ausgegeben und der Entwickler muss die Implementierung überprüfen, um mögliche Fehler oder Optimierungsmöglichkeiten zu identifizieren. Die Testsuite stellt die robuste und zuverlässige Funktionalität des A*-Algorithmus in der Klasse sicher, was für die sichere Navigation im Graphennetzwerk in einer autonomen Fahrzeuganwendung von entscheidender Bedeutung ist.
+
+\section{Leistungsvergleich des A*-Algorithmus: Ausführungszeiten auf verschiedenen Graphen}
+ In diesem Abschnitt werden Laufzeit und Speicherbedarf des A*-Algorithmus anhand von Benchmark-Tests verglichen. Die Tests wurden mit dem Google Benchmark Frame\-work durchgeführt, einer leistungsfähigen C++ Benchmark Suite, die von Google entwickelt wurde. Das Framework ermöglicht es Entwicklern, die Performance von C++-Code zu messen, verschiedene Implementierungen zu vergleichen und Engpässe oder Performance-Probleme zu identifizieren. 
+ 
+ Die Ergebnisse der Benchmark-Tests sind in der Tabelle \ref{tab:benchmark_erg} dargestellt, in der die Ausführungszeit (Time), die CPU-Zeit (CPU) und die Anzahl der Iterationen (Iterations) für verschiedene Szenarien aufgelistet sind.
+
+\begin{table}[h]
+	\centering
+	\begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{lrrr}
+			\toprule
+			Benchmark & Time & CPU & Iterations \\
+			\midrule
+			Simple & 4384524 ns & 2703059 ns & 237 \\
+			Complex & 179371133 ns & 132812500 ns & 6 \\
+			Multiple runs & 33912684 ns & 27832031 ns & 32 \\
+			Multiple runs with competition track & 8878551100 ns & 6921875000 ns & 1 \\
+			\bottomrule
+		\end{tabular}
+	\end{adjustbox}
+	\caption{Benchmark-Ergebnisse des A*-Algorithmus}
+	\label{tab:benchmark_erg}
+\end{table}
+
+Ein Blick auf die Tabelle zeigt einen deutlichen Unterschied in der Ausführungszeit des A*-Algorithmus auf einfachen und komplexen Graphen. Die Ausführungszeit auf einfachen Graphen betrug durchschnittlich etwa \SI{4}{\milli\second}, während auf komplexen Graphen durchschnittlich etwa \SI{179}{\milli\second} benötigt wurden. Diese Ergebnisse bestätigten die Erwartung, dass die Suche nach dem kürzesten Weg auf einfachen Graphen weniger rechenintensiv ist.
+
+Ein weiteres interessantes Ergebnis ist die Stabilität der Laufzeit bei wiederholter Ausführung. Wie in Tabelle \ref{tab:benchmark_erg} zu sehen ist, zeigt der Benchmark-Test \glqq Multiple runs\grqq{} eine geringe Variation in den Laufzeiten. Dies deutet darauf hin, dass der Algorithmus konsistente und vorhersagbare Ergebnisse liefert, auch wenn es mehrmals ausgeführt wird. 
+\newpage
+Es ist wichtig anzumerken, dass sich die in dieser Analyse präsentierten Ergebnisse hauptsächlich auf die Ausführungszeit beziehen. Die genaue Messung des Speicherbedarfs erfordert spezielle Werkzeuge und Mechanismen zur Ressourcenüberwachung, die in diesem Rahmen nicht durchgeführt wurden 
+
+Die Ergebnisse der Benchmarks zeigen, dass der A*-Algorithmus einen leistungsfähigen Algorithmus zur Routenplanung darstellt. Die Laufzeit hängt jedoch stark von der Komplexität des zugrundeliegenden Graphen ab.
+
+
+\newpage

@@ -1,0 +1,157 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{noauthor_-algorithmus_2022-1}{misc}{}
+      \list{language}{1}{%
+        {de}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Der A*-Algorithmus („A Stern“ oder englisch „a star“, auch A*-Suche) gehört zur Klasse der informierten Suchalgorithmen. Er dient in der Informatik der Berechnung eines kürzesten Pfades zwischen zwei Knoten in einem Graphen mit positiven Kantengewichten. Er wurde das erste Mal 1968 von Peter Hart, Nils J. Nilsson und Bertram Raphael beschrieben. Der Algorithmus gilt als Verallgemeinerung und Erweiterung des Dijkstra-Algorithmus, in vielen Fällen kann aber umgekehrt A* auch auf Dijkstra reduziert werden. Im Gegensatz zu uninformierten Suchalgorithmen verwendet der A*-Algorithmus eine Schätzfunktion (Heuristik), um zielgerichtet zu suchen und damit die Laufzeit zu verringern. Der Algorithmus ist vollständig und optimal. Das heißt, dass immer eine optimale Lösung gefunden wird, falls eine existiert.}
+      \field{journaltitle}{Wikipedia}
+      \field{month}{2}
+      \field{note}{Page Version ID: 219778390}
+      \field{title}{A*-{Algorithmus}}
+      \field{urlday}{29}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb Snapshot:C\:\\Users\\seidj\\Zotero\\storage\\HKTHKE25\\A-Algorithmus.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://de.wikipedia.org/w/index.php?title=A*-Algorithmus&oldid=219778390
+      \endverb
+      \verb{url}
+      \verb https://de.wikipedia.org/w/index.php?title=A*-Algorithmus&oldid=219778390
+      \endverb
+    \endentry
+    \entry{russell_artificial_2010}{book}{}
+      \name{author}{3}{}{%
+        {{hash=18ee0a7bfc995f40254c9d425c977a49}{%
+           family={Russell},
+           familyi={R\bibinitperiod},
+           given={Stuart\bibnamedelima J.},
+           giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=5de798d5fa3c0236c0478134cd23f52a}{%
+           family={Norvig},
+           familyi={N\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=5e313a551f14d86a5958c804b661f644}{%
+           family={Davis},
+           familyi={D\bibinitperiod},
+           given={Ernest},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Upper Saddle River}%
+      }
+      \list{publisher}{1}{%
+        {Prentice Hall}%
+      }
+      \strng{namehash}{598a3ad9742abcf5554a0573000094b6}
+      \strng{fullhash}{5f7c0e9daf4f053f0513ab05a253f495}
+      \strng{bibnamehash}{5f7c0e9daf4f053f0513ab05a253f495}
+      \strng{authorbibnamehash}{5f7c0e9daf4f053f0513ab05a253f495}
+      \strng{authornamehash}{598a3ad9742abcf5554a0573000094b6}
+      \strng{authorfullhash}{5f7c0e9daf4f053f0513ab05a253f495}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{edition}{3rd ed}
+      \field{isbn}{978-0-13-604259-4}
+      \field{series}{Prentice {Hall} series in artificial intelligence}
+      \field{shorttitle}{Artificial intelligence}
+      \field{title}{Artificial intelligence: a modern approach}
+      \field{year}{2010}
+      \keyw{Artificial intelligence}
+    \endentry
+    \entry{sedgewick_algorithms_2011}{book}{}
+      \name{author}{2}{}{%
+        {{hash=6a9c16ef79ae932cd7e8bc985da5a937}{%
+           family={Sedgewick},
+           familyi={S\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f31fcdb051091790dc97d665b6c04f48}{%
+           family={Wayne},
+           familyi={W\bibinitperiod},
+           given={Kevin\bibnamedelima Daniel},
+           giveni={K\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Upper Saddle River, NJ}%
+      }
+      \list{publisher}{1}{%
+        {Addison-Wesley}%
+      }
+      \strng{namehash}{10569074d2ecf299211595e3c883c388}
+      \strng{fullhash}{10569074d2ecf299211595e3c883c388}
+      \strng{bibnamehash}{10569074d2ecf299211595e3c883c388}
+      \strng{authorbibnamehash}{10569074d2ecf299211595e3c883c388}
+      \strng{authornamehash}{10569074d2ecf299211595e3c883c388}
+      \strng{authorfullhash}{10569074d2ecf299211595e3c883c388}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{annotation}{Includes index}
+      \field{edition}{4th ed}
+      \field{isbn}{978-0-321-57351-3}
+      \field{title}{Algorithms}
+      \field{year}{2011}
+      \keyw{Computer algorithms,Textbooks}
+    \endentry
+    \entry{noauthor_greedy_2022}{misc}{}
+      \list{language}{1}{%
+        {en-us}%
+      }
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions.}
+      \field{journaltitle}{GeeksforGeeks}
+      \field{month}{12}
+      \field{note}{Section: DSA}
+      \field{title}{Greedy {Best} first search algorithm}
+      \field{urlday}{4}
+      \field{urlmonth}{8}
+      \field{urlyear}{2023}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{file}
+      \verb Snapshot:C\:\\Users\\seidj\\Zotero\\storage\\MWZW2DYE\\greedy-best-first-search-algorithm.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.geeksforgeeks.org/greedy-best-first-search-algorithm/
+      \endverb
+      \verb{url}
+      \verb https://www.geeksforgeeks.org/greedy-best-first-search-algorithm/
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
