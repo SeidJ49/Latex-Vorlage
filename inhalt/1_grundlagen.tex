@@ -1,0 +1,127 @@
+\chapter{Grundlagen}
+In diesem Kapitel werden die wichtigen Grundlagen für diese
+Aufgabenstellung erläutert.
+
+\section{Die Programmiersprache Java}
+Da das Projekt in Java\index{Java} realisiert wird, wird hier ein kurzer
+Überblick gegeben. Java kann auch Rechnen, somit ist die Lösung für Gleichung
+\ref{equ:plus} auf Seite \pageref{equ:plus} nicht weit entfernt \cite{PAPULA}
+\cite{MARTIN}.
+\begin{equation}
+\label{equ:plus}
+x = 1 + y\ :\ y = 7
+\end{equation}
+
+\subsection{Klassen}
+In Listing \ref{lst:javaclass} auf Seite \pageref{lst:javaclass} ist
+eine einfache Java Klasse\index{Klasse} zu sehen. In den letzten Jahren
+hat sich die Bezeichnung \textbf{\acrshort{acr:POJO}} für einfache Klassen
+eingebürgert. Eine ausführliche Einführung in Java\index{Java} und die
+\textbf{Objekt Orientierte Programmierung (OOP)} ist in \emph{Java als
+erste Programmiersprache} von Joachim Goll, Cornelia Heinisch und Frank
+Müller enthalten \cite{GOLL}.
+\begin{lstlisting}[caption=Eine einfache Java Klasse,label=lst:javaclass]
+class Simple
+{
+        private String text;
+        
+        public Simple(String text) {
+                this.text = text;
+        }
+        
+        public void printText() {
+                System.out.println(text);
+        }
+}
+\end{lstlisting}
+
+\subsection{Java Logo}
+In Abbildung \ref{fig:javalogo} auf Seite \pageref{fig:javalogo}
+ist das Java\index{Java} Logo abgebildet. Die \textbf{\acrshort{acr:JRE}},
+sowie der \textbf{\acrshort{acr:JDK}}, verwenden dieses Logo\index{Logo} an
+vielen Stellen. Es ist auch sonst in vielen Programmen und
+Internet\index{Internet} Seiten zu sehen.
+
+\begin{figure}[hb]
+\centering
+\includegraphics[scale=0.8]{bilder/javalogo.jpg}
+\caption{Das Java Logo}
+\label{fig:javalogo}
+\end{figure}
+
+Es gibt aber auch andere Logos, die mit Java in Zusammenhang stehen.
+Ein Beispiel ist das Java Maskottchen Duke, das in Abbildung \ref{fig:duke}
+auf Seite \pageref{fig:duke} gezeigt wird.
+
+\begin{figure}[hb]
+\centering
+\includegraphics[scale=0.6]{bilder/duke.jpg}
+\caption{Duke, das Java Maskottchen}
+\label{fig:duke}
+\end{figure}
+
+\subsection{Zugriffsschutz}
+Um Teile einer Klasse gegen unbefugten Zugriff zu schützen besitzt
+Java\index{Java} die in Tabelle \ref{tab:modifier} auf Seite
+\pageref{tab:modifier} enthaltenen \textbf{Modifizierer}\index{Modifizierer}.
+
+\begin{table}[hb]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Modifier} & \textbf{Wirkung}\\
+\hline
+\hline
+\texttt{private} & Privat\\
+\hline
+\texttt{public} & Öffentlich\\
+\hline
+\texttt{protected} & Eingeschränkt\\
+\hline
+\texttt{final} & Nicht änderbar\\
+\hline
+... & ...\\
+\hline
+\end{tabular}
+\caption{Modifizierer für den Zugriffsschutz}
+\label{tab:modifier}
+\end{table}
+
+Das Prinzip des \textbf{Information Hiding}\index{Information Hiding} schreibt
+vor dass man den Zugriff soweit wie Möglich einschränkt.
+
+\subsection{Die Klasse \texttt{Object}}
+In Java\index{Java} erben alle Klassen\index{Klasse} automatisch von der Klasse
+\texttt{Object}\index{Objekt}. Einige wichtige Methoden\index{Methode} der
+Klasse \texttt{Object} sind in Tabelle \ref{tab:object} auf Seite
+\pageref{tab:object} aufgelistet.
+
+\begin{table}[hb]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Methode} & \textbf{Funktion}\\
+\hline
+\hline
+\texttt{toString()} & Darstellung als \texttt{String}\\
+\hline
+\texttt{equals()} & Vergleiche mit anderen Objekten\\
+\hline
+\texttt{hashCode()} & Hashcode erzeugen (Siehe \texttt{Hashtable})\\
+\hline
+\texttt{clone()} & Exakte Kopie erzeugen\\
+\hline
+... & ...\\
+\hline
+\end{tabular}
+\caption{Wichtige Methoden der Klasse \texttt{Object}}
+\label{tab:object}
+\end{table}
+
+Es sollten im Normalfall mindestens die Methoden\index{Methode}
+\texttt{toString()} und \texttt{equals()} überschrieben werden. Das
+Überschreiben von \texttt{clone()} kann aber -- je nach Anwendung -- auch Sinn
+machen. Beim Überschreiben von Methoden sollte man die
+Annotation\index{Annotation} \texttt{@Over- ride} verwenden, da sie einen
+davon abhält die Methode versehentlich nur zu überladen.
+

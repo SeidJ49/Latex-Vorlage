@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{MARTIN}
+{Ekbert Hering, Rolf Martin und Martin Stohrer}.
+\newblock {\em Physik für Ingenieure}.
+\newblock Springer Verlag, 2004.
+
+\bibitem{GOLL}
+{Joachim Goll, Cornelia Heinisch und Frank Müller}.
+\newblock {\em Java als erste Programmiersprache}.
+\newblock Teubner Verlag, 2005.
+
+\bibitem{PAPULA}
+{Lothar Papula}.
+\newblock {\em Mathematische Formelsammlung für Wissenschaftler und
+  Ingenieure}.
+\newblock Vieweg Verlag, 2003.
+
+\bibitem{DAUSMANN}
+{Manfred Dausmann, Ulrich Bröckl und Joachim Goll}.
+\newblock {\em C als erste Programmiersprache}.
+\newblock Teubner Verlag, 2005.
+
+\end{thebibliography}

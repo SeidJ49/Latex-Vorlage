@@ -1,0 +1,138 @@
+\include{preamble}
+
+\newacronym{acr:POJO}{POJO}{Plain Old Java Object}
+\newacronym{acr:JRE}{JRE}{Java Runtime Environment}
+\newacronym{acr:JDK}{JDK}{Java Development Kit}
+\glsadd{acr:POJO}
+\glsadd{acr:JRE}
+\glsadd{acr:JDK}
+
+% Beginn des eigentlichen Dokuments
+
+\begin{document}
+
+% Titelseite (verwendet pagestyle=empty)
+\begin{titlepage}
+\begin{center}
+\includegraphics[scale=0.6]{bilder/he_logo.jpg}\\
+\vspace{0.5cm} Fakultät Informatik und Informationstechnik\\
+\vspace{0.5cm} Studiengang Technische Informatik\\
+\vspace{1.5cm} Arbeit zur Erlangung des akademischen Grades\\
+\vspace{0.5cm} \Large Bachelor of Engineering\\
+\vspace{1.5cm} \Huge Setzen einer wissenschaftlichen Arbeit mit \LaTeX\\
+\vspace{1.5cm} \Large Max Mustermann\\\normalsize
+\vspace{0.5cm} Sommerssemester 2017\\\normalsize
+\vfill{}
+\begin{tabular}{rl}
+Firma: & Große Firma GmbH\\[0.5cm]
+Betreuer: & Dipl. Ing. (FH) Max Betreuer\\[0.5cm]
+Erstprüfer: & Prof. Dr. Hans Wissenschaftler\\
+Zweitprüfer: & Prof. Dr. Walter Forscher\\
+\end{tabular}
+\end{center}
+\end{titlepage}
+
+% Zitat / Widmung
+\thispagestyle{empty}
+\vspace*{2cm}
+\begin{center}
+\begin{minipage}{12cm}
+\begin{center}
+Gewidmet den Besuchern des \LaTeX{} Ferienkurses. Auf dass diese Vorlage
+zu einer guten Note beiträgt.
+\end{center}
+\end{minipage}
+\vfill{}
+\begin{minipage}{10cm}
+\begin{quote}
+\textit{"`Premature optimization is the root of all evil."'}
+\end{quote}
+\hfill Donald Knuth
+\end{minipage}
+\end{center}
+
+% Erklärung
+\chapter*{Erklärung}
+\thispagestyle{empty}
+Hiermit erkläre ich, dass ich die vorliegende Arbeit selbstständig angefertigt habe. Es wurden nur die in der Arbeit ausdrücklich benannten Quellen und Hilfsmittel benutzt. Wörtlich oder sinngemäß übernommenes Gedankengut habe ich als solches kenntlich gemacht.
+\vspace{1cm}
+\begin{center}
+\begin{tabular}[h]{lp{2cm}p{5.5cm}}
+Esslingen, \today &  & \\
+\cline{1-1}\cline{3-3}
+Ort, Datum&  & Max Mustermann\\
+\end{tabular}
+\end{center}
+
+% Sperrvermerk
+\chapter*{Sperrvermerk}
+\thispagestyle{empty}
+Das vorliegende Dokument enthält vertrauliche Daten der Firma "`FIRMENNAME und GESCHÄFTSFORM"'. Veröffentlichungen oder Vervielfältigungen des vorliegen Dokuments, auch nur auszugsweise, sind ohne ausdrückliche Genehmigung der Firma "`FIRMENNAME und GESCHÄFTSFORM"' nicht gestattet. Das Dokument ist lediglich den betreuenden Professoren zugänglich zu machen. Ohne schriftliche Genehmigung der Firma darf dieses Dokument nicht in der Bibliothek der Hochschule ausgelegt werden.
+
+% Danksagung
+\chapter*{Danksagung}
+\thispagestyle{empty}
+Ich danke allen Besuchern des \LaTeX{}\index{\LaTeX{}} Ferienkurses, sowie Professor Dausmann für die Möglichkeit diesen zu betreuen. Weiterhin danke ich Donald Knuth für die Erfindung von \TeX{}\index{\TeX{}}, sowie Leslie Lamport für seine tollen \TeX{} Makros\index{Makro} (a.k.a. \LaTeX{}).
+
+% "Frontmatter" beginnen (Formatierung umschalten)
+% Platz für Inhaltsverzeichnis und anderes
+\frontmatter
+
+% Inhaltsverzeichnis ausgeben
+\tableofcontents
+
+% Definiert die deutschen Einträge im Inhaltsverzeichnis
+% Direkt vor \printglossary einbinden
+\deftranslation[to=German]{Acronyms}{Abkürzungsverzeichnis}
+\deftranslation[to=German]{Glossary}{Stichwortverzeichnis}
+
+% Die Überschrift für den Eintrag mit title= überschreiben
+% Ohne Angabe des type wird type "glossary" verwendet
+% Ausser "altlist" existieren einige andere Stile wie z.B. "long"
+\printglossary[style=altlist, title=Stichwortverzeichnis]
+\newpage
+
+% Das Abkürzungsverzeichnis hat den Typ \acronymtype
+\printglossary[type=\acronymtype, style=long, title=Abkürzungsverzeichnis]
+\newpage
+
+% Das selbstdefinierte Verzeichnis ausgeben
+\printglossary[type=symbolslist, style=long, title=Symbolverzeichnis]
+\newpage
+
+% Hauptteil beginnen (Formatierung umschalten)
+\mainmatter
+
+%------------------------------------------------------------------
+%                      Kapitelstruktur einfügen
+%------------------------------------------------------------------
+\include{inhalt/einleitung}
+
+\include{inhalt/1_grundlagen}
+\include{inhalt/2_anforderungen}
+\include{inhalt/3_systemanalyse}
+\include{inhalt/4_systementwurf}
+
+\include{inhalt/zusammenfassung}
+
+
+
+% Alle Einträge der BibTeX Datenbank "zitieren"
+\nocite{*}
+% Auswahl der BibTeX Datenbank für das Literaturverzeichnis
+\bibliography{literatur}
+% Einstellen des Bibliography-Stils für das Literaturverzeichnis
+\bibliographystyle{plain}
+
+% Abbildungsverzeichnis ausgeben
+\listoffigures
+% Tabellenverzeichnis ausgeben
+\listoftables
+
+\lstlistoflistings
+
+% Anhang beginnen (Formatierung umschalten)
+\appendix
+\include{inhalt/anhang}
+
+\end{document}
